@@ -7,6 +7,7 @@ dotenv.config();
 
 const connectMongoDB = require('./config/mongoDb');
 const apiRoutes = require('./routes/apiRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ connectMongoDB();
 
 // Routes
 app.use('/api', apiRoutes);
+app.use('/api/auth', authRoutes);
 
 // A simple route to test if server is running
 app.get('/', (req, res) => {

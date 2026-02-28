@@ -2,9 +2,13 @@ const express = require('express');
 const router = express.Router();
 const queryController = require('../controllers/queryController');
 const aiController = require('../controllers/aiController');
+const { optionalAuth, protect } = require('../middleware/authMiddleware');
 
 // Route to execute SQL queries
-router.post('/execute-query', queryController.executeQuery);
+router.post('/execute-query', optionalAuth, queryController.executeQuery);
+
+// Route to get attempts for an assignment
+router.get('/attempts/:assignmentId', protect, queryController.getAttempts);
 
 // Route to get a hint from AI
 router.post('/get-hint', aiController.getHint);

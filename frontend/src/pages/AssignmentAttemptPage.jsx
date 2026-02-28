@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import '../styles/pages/_assignmentAttempt.scss';
+import { AuthContext } from '../context/AuthContext';
 
 const AssignmentAttemptPage = () => {
     // Get the assignment ID from the URL
@@ -13,6 +14,9 @@ const AssignmentAttemptPage = () => {
     const [error, setError] = useState(null);
     const [hint, setHint] = useState('');
     const [loadingHint, setLoadingHint] = useState(false);
+
+    const { user } = useContext(AuthContext);
+    const [attempts, setAttempts] = useState([]);
 
     const [assignmentDetails, setAssignmentDetails] = useState(null);
     const [loadingDetails, setLoadingDetails] = useState(true);
@@ -34,23 +38,53 @@ const AssignmentAttemptPage = () => {
         fetchDetails();
     }, [assignmentId]);
 
-    // Function to handle the "Execute Query" button click
+    // Fetch previous attempts
+    React.useEffect(() => {
+        if (user && assignmentId) {
+            const fetchAttempts = async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`http://localhost:5000/api/attempts/${assignmentId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        setAttempts(data.attempts);
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch attempts", err);
+                }
+            };
+            fetchAttempts();
+        }
+    }, [user, assignmentId]);
+
     const handleExecute = async () => {
         setError(null);
         setResults(null); // Clear previous results
 
         try {
+            const token = localStorage.getItem('token');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
             const response = await fetch('http://localhost:5000/api/execute-query', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: query })
+                headers: headers,
+                body: JSON.stringify({ query: query, assignmentId: assignmentId })
             });
             const data = await response.json();
 
             if (data.success) {
                 setResults(data.data);
+                if (user) {
+                    setAttempts(prev => [{ query, status: 'success', timestamp: new Date().toISOString() }, ...prev]);
+                }
             } else {
                 setError(data.error);
+                if (user) {
+                    setAttempts(prev => [{ query, status: 'error', timestamp: new Date().toISOString() }, ...prev]);
+                }
             }
         } catch (err) {
             setError("Failed to connect to backend server. Make sure it is running on port 5000!");
@@ -176,6 +210,25 @@ const AssignmentAttemptPage = () => {
                         )}
                         {results && results.length === 0 && <p>No rows returned.</p>}
                     </div>
+
+                    {/* Previous Attempts Section */}
+                    {user && (
+                        <div className="attempts-panel" style={{ marginTop: '20px', background: '#1a1a2e', padding: '15px', borderRadius: '8px' }}>
+                            <h3 style={{ borderBottom: '1px solid #333', paddingBottom: '10px', color: '#fff' }}>Your Past Attempts</h3>
+                            {attempts.length === 0 ? (
+                                <p style={{ color: '#ccc', fontSize: '0.9rem', marginTop: '10px' }}>No previous attempts found.</p>
+                            ) : (
+                                <ul style={{ maxHeight: '200px', overflowY: 'auto', padding: '10px 0', listStyle: 'none' }}>
+                                    {attempts.map((attempt, idx) => (
+                                        <li key={idx} style={{ marginBottom: '10px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', borderLeft: `4px solid ${attempt.status === 'success' ? '#4facfe' : '#ff5252'}` }}>
+                                            <p style={{ margin: 0, fontSize: '0.85rem', color: '#ccc' }}>[{new Date(attempt.timestamp).toLocaleString()}] - <strong style={{ color: attempt.status === 'success' ? '#4facfe' : '#ff5252' }}>{attempt.status.toUpperCase()}</strong></p>
+                                            <code style={{ display: 'block', background: '#000', padding: '8px', marginTop: '8px', borderRadius: '4px', fontSize: '0.85rem', color: '#fff' }}>{attempt.query}</code>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
