@@ -1,0 +1,200 @@
+@import '../variables';
+@import '../mixins';
+
+.attempt-page {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    &__back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: $primary-color;
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+
+        @include respond-to(laptop) {
+            grid-template-columns: 1fr 2fr;
+            /* 1/3 left, 2/3 right on larger screens */
+        }
+    }
+
+    &__left-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    &__right-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+.question-box {
+    background-color: $white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &__title {
+        color: $secondary-color;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    &__text {
+        color: $text-main;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+}
+
+.schema-box {
+    background-color: $white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &__title {
+        color: $secondary-color;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid $primary-color;
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    &__table-name {
+        font-family: monospace;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        background-color: #f1f3f5;
+        padding: 0.25rem;
+        border-radius: 4px;
+    }
+
+    &__columns {
+        list-style: none;
+        padding: 0;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f1f3f5;
+
+            .col-name {
+                font-family: monospace;
+                color: $primary-color;
+            }
+
+            .col-type {
+                font-size: 0.85rem;
+                color: $text-light;
+                text-transform: uppercase;
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+}
+
+.editor-container {
+    border: 1px solid $secondary-color;
+    border-radius: 8px;
+    overflow: hidden;
+    /* prevents monaco editor from spilling out */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-bar {
+    display: flex;
+    gap: 1rem;
+
+    .btn {
+        flex: 1;
+        padding: 0.75rem;
+    }
+}
+
+.hint-box {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+
+    strong {
+        color: #1976d2;
+    }
+}
+
+.results-panel {
+    background-color: $white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &__title {
+        color: $secondary-color;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    &__error {
+        color: #d32f2f;
+        background-color: #ffebee;
+        padding: 1rem;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+
+    th,
+    td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid $border-color;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        color: $text-main;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    tbody tr {
+        &:hover {
+            background-color: #f1f3f5;
+        }
+    }
+}

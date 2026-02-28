@@ -1,0 +1,41 @@
+@import 'variables';
+
+// Breakpoint Mixin
+@mixin respond-to($breakpoint) {
+    @if $breakpoint ==mobile {
+        @media (min-width: $bp-mobile) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==tablet {
+        @media (min-width: $bp-tablet) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==laptop {
+        @media (min-width: $bp-laptop) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==desktop {
+        @media (min-width: $bp-desktop) {
+            @content;
+        }
+    }
+}
+
+// Flexbox Mixin
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
