@@ -112,4 +112,4 @@ npm run dev
 | **Logging DB** | MongoDB (Mongoose)                       |
 | **Auth**       | JSON Web Tokens (JWT)                    |
 
-
+![DFD_CipherSqlStudio](https://github.com/user-attachments/assets/c573e6ac-1d1c-40dc-8271-2065bfc4ff63)
