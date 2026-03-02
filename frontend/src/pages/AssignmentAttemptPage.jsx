@@ -146,6 +146,32 @@ const AssignmentAttemptPage = () => {
                             ))}
                         </ul>
                     </div>
+
+                    {assignmentDetails.sampleData && assignmentDetails.sampleData.length > 0 && (
+                        <div className="schema-box" style={{ marginTop: '20px' }}>
+                            <h3 className="schema-box__title">Sample Data</h3>
+                            <div className="table-responsive">
+                                <table className="results-table" style={{ fontSize: '0.85rem' }}>
+                                    <thead>
+                                        <tr>
+                                            {Object.keys(assignmentDetails.sampleData[0]).map((key) => (
+                                                <th key={key} style={{ padding: '8px' }}>{key}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {assignmentDetails.sampleData.map((row, index) => (
+                                            <tr key={index}>
+                                                {Object.values(row).map((val, i) => (
+                                                    <td key={i} style={{ padding: '8px' }}>{val}</td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Right side: Editor, Actions, Results, API Hint */}

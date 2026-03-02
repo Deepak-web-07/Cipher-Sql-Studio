@@ -45,6 +45,11 @@ router.get('/assignments/:id', (req, res) => {
             { column: 'first_name', type: 'varchar' },
             { column: 'last_name', type: 'varchar' },
             { column: 'age', type: 'integer' }
+        ],
+        sampleData: [
+            { id: 1, first_name: 'John', last_name: 'Doe', age: 25 },
+            { id: 2, first_name: 'Jane', last_name: 'Smith', age: 30 },
+            { id: 3, first_name: 'Alice', last_name: 'Johnson', age: 22 }
         ]
     });
 });

@@ -14,6 +14,19 @@ const executeQuery = async (req, res) => {
     let rowCount = 0;
     let errorMessage = '';
 
+    // Basic Validation & Sanitization for Security
+    // Only allow SELECT queries to prevent destructive actions on the sandbox database
+    const upperQuery = query.toUpperCase();
+    const isSelectQuery = upperQuery.trim().startsWith('SELECT');
+    const hasDangerousKeywords = /(INSERT|UPDATE|DELETE|DROP|ALTER|TRUNCATE|GRANT|REVOKE|EXEC|CREATE)/.test(upperQuery);
+
+    if (!isSelectQuery || hasDangerousKeywords) {
+        return res.status(403).json({
+            success: false,
+            error: "Security Error: Only SELECT queries are allowed."
+        });
+    }
+
     try {
         // Execute the query in PostgreSQL
         const result = await pgPool.query(query);
