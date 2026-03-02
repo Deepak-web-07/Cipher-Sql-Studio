@@ -5,10 +5,8 @@ import '../styles/pages/_assignmentAttempt.scss';
 import { AuthContext } from '../context/AuthContext';
 
 const AssignmentAttemptPage = () => {
-    // Get the assignment ID from the URL
     const { assignmentId } = useParams();
 
-    // States for our editor, results, and AI hints
     const [query, setQuery] = useState('-- Write your SQL query here\nSELECT * FROM users;');
     const [results, setResults] = useState(null);
     const [error, setError] = useState(null);
@@ -21,7 +19,7 @@ const AssignmentAttemptPage = () => {
     const [assignmentDetails, setAssignmentDetails] = useState(null);
     const [loadingDetails, setLoadingDetails] = useState(true);
 
-    // Fetch the specific assignment details when the page loads
+    // fetch assignment details
     React.useEffect(() => {
         const fetchDetails = async () => {
             try {
@@ -38,7 +36,7 @@ const AssignmentAttemptPage = () => {
         fetchDetails();
     }, [assignmentId]);
 
-    // Fetch previous attempts
+    // fetch previous attempts
     React.useEffect(() => {
         if (user && assignmentId) {
             const fetchAttempts = async () => {
@@ -61,7 +59,7 @@ const AssignmentAttemptPage = () => {
 
     const handleExecute = async () => {
         setError(null);
-        setResults(null); // Clear previous results
+        setResults(null);
 
         try {
             const token = localStorage.getItem('token');
@@ -91,10 +89,9 @@ const AssignmentAttemptPage = () => {
         }
     };
 
-    // Function to get a hint from Gemini
     const handleGetHint = async () => {
         setLoadingHint(true);
-        setHint(''); // Clear previous hint
+        setHint('');
 
         try {
             const response = await fetch('http://localhost:5000/api/get-hint', {
@@ -127,7 +124,6 @@ const AssignmentAttemptPage = () => {
             <Link to="/" className="attempt-page__back-link">← Back to Assignments</Link>
 
             <div className="attempt-page__layout">
-                {/* Left side: Question and Schema */}
                 <div className="attempt-page__left-panel">
                     <div className="question-box">
                         <h2 className="question-box__title">{assignmentDetails.title}</h2>
@@ -174,10 +170,7 @@ const AssignmentAttemptPage = () => {
                     )}
                 </div>
 
-                {/* Right side: Editor, Actions, Results, API Hint */}
                 <div className="attempt-page__right-panel">
-
-                    {/* The Code Editor */}
                     <div className="editor-container">
                         <Editor
                             height="300px"
@@ -188,7 +181,6 @@ const AssignmentAttemptPage = () => {
                         />
                     </div>
 
-                    {/* Action buttons */}
                     <div className="action-bar">
                         <button className="btn btn--primary" onClick={handleExecute}>
                             Run Query
@@ -198,14 +190,12 @@ const AssignmentAttemptPage = () => {
                         </button>
                     </div>
 
-                    {/* AI Hint Section */}
                     {hint && (
                         <div className="hint-box">
                             <strong>AI Hint:</strong> {hint}
                         </div>
                     )}
 
-                    {/* Results or Errors displaying */}
                     <div className="results-panel">
                         <h3 className="results-panel__title">Results</h3>
 
@@ -216,7 +206,6 @@ const AssignmentAttemptPage = () => {
                                 <table className="results-table">
                                     <thead>
                                         <tr>
-                                            {/* Get the headers automatically from the first object keys */}
                                             {Object.keys(results[0]).map((key) => (
                                                 <th key={key}>{key}</th>
                                             ))}
@@ -237,7 +226,6 @@ const AssignmentAttemptPage = () => {
                         {results && results.length === 0 && <p>No rows returned.</p>}
                     </div>
 
-                    {/* Previous Attempts Section */}
                     {user && (
                         <div className="attempts-panel" style={{ marginTop: '20px', background: '#1a1a2e', padding: '15px', borderRadius: '8px' }}>
                             <h3 style={{ borderBottom: '1px solid #333', paddingBottom: '10px', color: '#fff' }}>Your Past Attempts</h3>

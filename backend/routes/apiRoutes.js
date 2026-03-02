@@ -4,16 +4,13 @@ const queryController = require('../controllers/queryController');
 const aiController = require('../controllers/aiController');
 const { optionalAuth, protect } = require('../middleware/authMiddleware');
 
-// Route to execute SQL queries
 router.post('/execute-query', optionalAuth, queryController.executeQuery);
 
-// Route to get attempts for an assignment
 router.get('/attempts/:assignmentId', protect, queryController.getAttempts);
 
-// Route to get a hint from AI
 router.post('/get-hint', aiController.getHint);
 
-// Route to get all assignments (dummy data for now)
+// get dummy assignments
 router.get('/assignments', (req, res) => {
     res.json([
         {
@@ -31,9 +28,8 @@ router.get('/assignments', (req, res) => {
     ]);
 });
 
-// Route to get a specific assignment by ID
+// get specific assignment
 router.get('/assignments/:id', (req, res) => {
-    // For now, always return this dummy assignment for testing
     res.json({
         _id: req.params.id,
         title: "Basic SELECT Query",

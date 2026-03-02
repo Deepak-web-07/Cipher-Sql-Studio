@@ -1,7 +1,6 @@
 const pgPool = require('../config/postgresDb');
 const Attempt = require('../models/Attempt');
 
-// Controller to execute the SQL query written by the user
 const executeQuery = async (req, res) => {
     const { query, assignmentId } = req.body;
 
@@ -14,8 +13,7 @@ const executeQuery = async (req, res) => {
     let rowCount = 0;
     let errorMessage = '';
 
-    // Basic Validation & Sanitization for Security
-    // Only allow SELECT queries to prevent destructive actions on the sandbox database
+    // security check
     const upperQuery = query.toUpperCase();
     const isSelectQuery = upperQuery.trim().startsWith('SELECT');
     const hasDangerousKeywords = /(INSERT|UPDATE|DELETE|DROP|ALTER|TRUNCATE|GRANT|REVOKE|EXEC|CREATE)/.test(upperQuery);
@@ -28,7 +26,6 @@ const executeQuery = async (req, res) => {
     }
 
     try {
-        // Execute the query in PostgreSQL
         const result = await pgPool.query(query);
         data = result.rows;
         rowCount = result.rowCount;
@@ -37,7 +34,7 @@ const executeQuery = async (req, res) => {
         errorMessage = error.message;
     }
 
-    // Save the attempt if the user is authenticated and assignmentId is provided
+    // log attempt
     if (req.user && assignmentId) {
         try {
             await Attempt.create({
